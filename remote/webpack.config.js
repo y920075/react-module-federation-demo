@@ -4,12 +4,12 @@ const { ModuleFederationPlugin } = require("webpack").container;
 
 module.exports = {
   entry: "./src/index.jsx",
-  mode: "development",
+  mode: "production",
   devServer: {
-    port: 3002,
+    port: process.env.PORT || 3002,
   },
   output: {
-    publicPath: "http://localhost:3002/",
+    publicPath: `http://localhost:${process.env.PORT}/`,
     path: path.resolve(__dirname, "dist"),
   },
   resolve: {
@@ -32,7 +32,9 @@ module.exports = {
       name: "remote",
       filename: "remoteEntry.js",
       remotes: {
-        remote2: "remote2@http://localhost:3003/remoteEntry.js",
+        remote2: `remote2@http://localhost:${
+          process.env.REMOTE2_PORT || 3003
+        }/remoteEntry.js`,
       },
       exposes: {
         "./App": "./src/App",

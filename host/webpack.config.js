@@ -4,9 +4,9 @@ const { ModuleFederationPlugin } = require("webpack").container;
 
 module.exports = {
   entry: "./src/index.jsx",
-  mode: "development",
+  mode: "production",
   devServer: {
-    port: 3001,
+    port: process.env.PORT || 3001,
   },
   output: {
     filename: "main.js",
@@ -31,8 +31,9 @@ module.exports = {
     new ModuleFederationPlugin({
       filename: "app1",
       remotes: {
-        remote: "remote@http://localhost:3002/remoteEntry.js",
-        dynamicRemote: "dynamicRemote@http://localhost:3004/remoteEntry.js",
+        remote: `remote@http://localhost:${
+          process.env.REMOTE_PORT || 3002
+        }/remoteEntry.js`,
       },
       shared: {
         react: {

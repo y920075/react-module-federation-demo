@@ -11,17 +11,33 @@ function App() {
       <React.Suspense fallback={<h1>Remote Loading....</h1>}>
         <RemoteApp />
       </React.Suspense>
-      <button
-        onClick={() => {
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
           load(
-            "http://localhost:3004/remoteEntry.js",
-            "dynamicRemote",
-            "./App"
+            e.target.entryUrl.value,
+            e.target.scope.value,
+            e.target.module.value
           );
         }}
       >
-        Show Dynamic RemoteApp
-      </button>
+        <label htmlFor="entryUrl">Entry URL</label>
+        <input
+          type="text"
+          name="entryUrl"
+          defaultValue="http://localhost:3004/remoteEntry.js"
+        />
+        <label htmlFor="scope">Scope</label>
+        <input
+          type="text"
+          name="scope"
+          defaultValue="dynamicRemote"
+          placeholder="dynamicRemote"
+        />
+        <label htmlFor="module">Module</label>
+        <input type="text" name="module" defaultValue="./App" />
+        <button type="submit">Load Dynamic Remote</button>
+      </form>
       {!!Component && <Component />}
     </div>
   );

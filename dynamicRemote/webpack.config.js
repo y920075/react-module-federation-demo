@@ -4,12 +4,12 @@ const { ModuleFederationPlugin } = require("webpack").container;
 
 module.exports = {
   entry: "./src/index.jsx",
-  mode: "development",
+  mode: "production",
   devServer: {
-    port: 3004,
+    port: process.env.PORT || 3004,
   },
   output: {
-    publicPath: "http://localhost:3004/",
+    publicPath: `http://localhost:${process.env.PORT || 3004}/`,
     path: path.resolve(__dirname, "dist"),
   },
   resolve: {

@@ -1,0 +1,60 @@
+services:
+  remote2:
+    env_file:
+      - .env
+    build:
+      context: ./remote2
+      dockerfile: ./Dockerfile
+      args:
+        - REMOTE2_PORT=$REMOTE2_PORT
+    networks:
+      - net
+    ports:
+      - "$REMOTE2_PORT:$REMOTE2_PORT"
+  remote:
+    env_file:
+      - .env
+    build:
+      context: ./remote
+      dockerfile: ./Dockerfile
+      args:
+        - REMOTE_PORT=$REMOTE_PORT
+        - REMOTE2_PORT=$REMOTE2_PORT
+    networks:
+      - net
+    ports:
+      - "$REMOTE_PORT:$REMOTE_PORT"
+    depends_on:
+      - remote2
+  dynamic-remote:
+    env_file:
+      - .env
+    build:
+      context: ./dynamicRemote
+      dockerfile: ./Dockerfile
+      args:
+        - DY_REMOTE_PORT=$DY_REMOTE_PORT
+    networks:
+      - net
+    ports:
+      - "$DY_REMOTE_PORT:$DY_REMOTE_PORT"
+    depends_on:
+      - remote
+  host:
+    env_file:
+      - .env
+    build:
+      context: ./host
+      dockerfile: ./Dockerfile
+      args:
+        - HOST_PORT=$HOST_PORT
+        - REMOTE_PORT=$REMOTE_PORT
+    networks:
+      - net
+    ports:
+      - "$HOST_PORT:$HOST_PORT"
+    depends_on:
+      - dynamic-remote
+networks:
+  net:
+    driver: bridge
